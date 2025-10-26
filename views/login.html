@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | LearnFast</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class=" mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="#" class="flex items-center space-x-2">
+            <div class="w-9 h-9 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">LF</div>
+            <span class="font-semibold text-lg">LearnFast</span>
+          </a>
+          <nav class="hidden md:flex space-x-4 text-sm text-gray-600">
+            <a class="hover:text-indigo-600" href="#">All Courses</a>
+            <a class="hover:text-indigo-600" href="#">For Teams</a>
+            <a class="hover:text-indigo-600" href="#">About</a>
+          </nav>
+        </div>
+
+        <div class="flex-1 mx-6 hidden lg:block">
+          <div class="relative">
+            <input id="search" type="text" placeholder="Search for anything — design, coding, marketing..."
+              class="w-full rounded-lg border border-gray-200 py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            <button
+              class="absolute right-1 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm">Search</button>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <a class="hidden md:inline text-sm px-3 py-1.5 border rounded hover:bg-gray-100" href="./signup">Become an
+            instructor</a>
+          <a class="text-sm px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700" href="./signup">Sign
+            up</a>
+          <a class="text-sm px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700" href="./login">Log in</a>
+        </div>
+
+        <!-- mobile menu button -->
+        <button id="mobileMenuBtn" class="ml-3 p-2 md:hidden rounded-md hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- mobile nav -->
+      <div id="mobileNav" class="md:hidden hidden pb-4">
+        <input type="text" placeholder="Search courses..." class="w-full rounded-md border border-gray-200 p-2 mb-3" />
+        <div class="flex flex-col space-y-2">
+          <a class="px-2 py-2 rounded hover:bg-gray-100" href="#">All Courses</a>
+          <a class="px-2 py-2 rounded hover:bg-gray-100" href="#">For Teams</a>
+          <a class="px-2 py-2 rounded hover:bg-gray-100" href="#">About</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Toasts -->
+  <div class="absolute z-[1] place-self-center">
+    <div id="toast-success"
+      class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800 hidden"
+      role="alert">
+      <div
+        class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+          viewBox="0 0 20 20">
+          <path
+            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+        </svg>
+        <span class="sr-only">Check icon</span>
+      </div>
+      <div class="ms-3 text-sm font-normal">Logged successfully.</div>
+      <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        data-dismiss-target="#toast-success" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+      </button>
+    </div>
+    <div id="toast-danger"
+      class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800 hidden"
+      role="alert">
+      <div
+        class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+          viewBox="0 0 20 20">
+          <path
+            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+        </svg>
+        <span class="sr-only">Error icon</span>
+      </div>
+      <div class="ms-3 text-sm font-normal">Username or Password is incorrect.</div>
+      <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        data-dismiss-target="#toast-danger" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <!-- LOGIN FORM -->
+  <div class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8">
+      <!-- Logo -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">LearnFast</h1>
+        <p class="text-sm text-gray-500">Log in to your account</p>
+      </div>
+      <!-- Login Form -->
+      <form onsubmit="loginIn(event)" class="space-y-4">
+        <!-- Email -->
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <input type="text" name="username" id="username" required
+            class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 border-gray-300 sm:text-sm" />
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <input type="password" name="password" id="password" required
+            class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 border-gray-300 sm:text-sm" />
+        </div>
+
+        <!-- Submit -->
+        <div>
+          <button type="submit"
+            class="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+            Log In
+          </button>
+        </div>
+      </form>
+
+      <!-- Divider -->
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-2 bg-white text-gray-500">Or continue with</span>
+        </div>
+      </div>
+
+      <!-- Social logins -->
+      <div class="grid grid-cols-2 gap-3">
+        <a href="#"
+          class="flex items-center justify-center w-full border border-gray-300 rounded-md py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+          <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-5 h-5 mr-2" alt="Google" /> Google
+        </a>
+        <a href="#"
+          class="flex items-center justify-center w-full border border-gray-300 rounded-md py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+          <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="w-5 h-5 mr-2" alt="Facebook" />
+          Facebook
+        </a>
+      </div>
+
+      <!-- Signup link -->
+      <p class="mt-6 text-center text-sm text-gray-600">
+        Don’t have an account?
+        <a href="/signup" class="font-medium text-purple-600 hover:text-purple-500">Sign up</a>
+      </p>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer class="mt-12 bg-white border-t">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">LF</div>
+            <div>
+              <div class="font-semibold">LearnFast</div>
+              <div class="text-sm text-gray-500">Online courses to boost your career</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-sm text-gray-500 flex gap-6">
+          <div>© <span id="year"></span> LearnFast</div>
+          <a class="hover:underline" href="#">Terms</a>
+          <a class="hover:underline" href="#">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+<!-- LOGIN Logic-->
+<script>
+  async function loginIn(e) {
+    e.preventDefault()
+    username = document.getElementById("username").value,
+      password = document.getElementById("password").value
+
+    const formData = { username, password }
+    const res = await fetch('/auth/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    })
+    const response = await res.json();
+    if (res.ok) {
+      document.getElementById("toast-success").className = "flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800"
+      localStorage.setItem('login_jwt', response.token)
+      location.href = "http://localhost:3000/dashboard/" + response.role
+    } else
+      document.getElementById("toast-danger").className = "flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800"
+  }
+</script>
+
+</html>

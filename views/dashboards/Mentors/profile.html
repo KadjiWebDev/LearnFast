@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Mentor Profile — LearnFast</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded font-bold">LF</div>
+        <span class="font-semibold text-lg">LearnFast</span>
+      </a>
+      <nav class="flex gap-4 text-sm text-gray-600">
+        <a href="/dashboard/mentor/" class="hover:text-indigo-600">Dashboard</a>
+        <a href="/dashboard/mentor/courses" class="hover:text-indigo-600">Courses</a>
+        <a href="/dashboard/mentor/requests" class="hover:text-indigo-600">Requests</a>
+        <a href="/dashboard/mentor/profile" class="text-indigo-600 font-medium">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PROFILE HERO -->
+  <section class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center md:items-start gap-8">
+      <!-- Avatar -->
+      <img id="profilePicture" src=".." alt="Mentor Avatar" class="w-32 h-32 rounded-full object-cover border"/>
+
+      <!-- Info -->
+      <div class="flex-1 space-y-3">
+        <h1 id="full_name" class="text-2xl font-bold"></h1>
+        <div class="text-gray-600"><span id="role"></span> • <span id="title"></span></div>
+        
+        
+
+        <!-- Social links -->
+        <div id="social_m" class="flex gap-3 mt-2">
+          <a href="#" class="text-blue-600 hover:underline">LinkedIn</a>
+          <a href="#" class="text-pink-500 hover:underline">Instagram</a>
+          <a href="#" class="text-blue-800 hover:underline">Facebook</a>
+          <a href="#" class="text-indigo-600 hover:underline">Portfolio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIO -->
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <h2 class="text-xl font-semibold mb-3">About Me</h2>
+    <p class="text-gray-700 leading-relaxed" id="bio">
+    </p>
+  </section>
+
+  <!-- COURSES -->
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <h2 class="text-xl font-semibold mb-3">Courses by <span id="setName"></span></h2>
+    <div id="courses" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Course Card -->
+         
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-100 py-6 mt-12">
+    <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-500">
+      © 2025 LearnFast — Mentor Profile
+    </div>
+  </footer>
+
+</body>
+
+<script>
+    async function retrieveProfile(){
+    res = await fetch('/dashboard/mentor/me',{
+    headers:{
+     Authorization:"Bearer " + localStorage.getItem('login_jwt')
+    }
+    })
+    response = await res.json();
+        if(res.ok){
+        document.getElementById("profilePicture").src= "http://localhost:3000"+response.user.profile_picture
+        document.getElementById("bio").innerHTML = response.user.bio
+        document.getElementById("full_name").innerHTML = response.user.full_name
+        document.getElementById("role").innerHTML= response.user.role
+        document.getElementById("title").innerHTML= response.mentor.title
+        document.getElementById("setName").innerHTML= response.user.full_name
+        document.getElementById("social_m").innerHTML = `
+            <a href="${response.mentor.linkedIN !== 'Not provided yet' ? response.mentor.linkedIN : '#'}" class="text-blue-600 hover:underline">LinkedIn</a>
+            <a href="${response.mentor.instagram !== 'Not provided yet' ? response.mentor.instagram : '#'}" class="text-pink-500 hover:underline">Instagram</a>
+            <a href="${response.mentor.facebook !== 'Not provided yet' ? response.mentor.facebook : '#'}" class="text-blue-800 hover:underline">Facebook</a>
+            <a href="${response.mentor.portfolio !== 'Not provided yet' ? response.mentor.portfolio : '#'}" class="text-indigo-600 hover:underline">Portfolio</a>
+        `;
+        document.getElementById("courses").innerHTML = response.mentor.courses.map(course =>{
+            return `
+        <div class="bg-white rounded-lg shadow hover:shadow-md transition p-4">
+            <img src="${course.previewImage || '#'}" class="w-full h-40 object-cover rounded"/>
+            <h3 class="font-semibold mt-3">${course.title}</h3>
+            <p class="text-sm text-gray-600 mt-1">${course.description}</p>
+            <div class="flex items-center justify-between mt-3">
+            <span class="font-bold text-indigo-600">${course.pricing}$</span>
+            </div>
+        </div>
+            `
+        })
+
+        }
+    }
+
+retrieveProfile();
+</script>
+</html>

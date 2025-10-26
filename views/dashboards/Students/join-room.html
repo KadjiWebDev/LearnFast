@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Join Meeting — LearnFast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/student/index.html" class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded font-bold">LF
+                </div>
+                <span class="font-semibold text-lg">LearnFast Student</span>
+            </a>
+            <nav class="flex gap-4 text-sm text-gray-600">
+                <a href="/student/index.html" class="hover:text-indigo-600">Dashboard</a>
+                <a href="/student/courses.html" class="hover:text-indigo-600">My Courses</a>
+                <a href="/student/join_room.html" class="text-indigo-600 font-medium">Join Meeting</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-3xl mx-auto mt-16 px-4">
+        <div class="bg-white rounded-lg shadow p-8 text-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Join Mentor Meeting Room</h2>
+            <p class="text-gray-600 mb-8">
+                Enter the <strong>Room ID</strong> shared by your mentor to join the live session.
+            </p>
+
+            <form id="joinForm" onsubmit="joinRoom(event)" class="space-y-6">
+                <div>
+                    <label class="block text-left text-sm font-medium text-gray-700 mb-1">Room ID</label>
+                    <input id="roomId" type="text" required placeholder="e.g. ROOM-ABC123XYZ"
+                        class="w-full border rounded px-3 py-3 text-center text-lg tracking-wide focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded text-lg font-medium transition">
+                        Join Room
+                    </button>
+                </div>
+            </form>
+
+            <!-- OPTIONAL PREVIEW MESSAGE -->
+            <div class="mt-8 text-gray-500 text-sm">
+                <p>Make sure your camera and microphone are ready before joining.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 mt-12 py-6">
+        <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
+            © 2025 LearnFast — Student Meeting Access
+        </div>
+    </footer>
+
+    <script>
+        // Handle Join Room
+        function joinRoom(e) {
+            e.preventDefault();
+            const roomId = document.getElementById('roomId').value.trim();
+
+            if (!roomId) {
+                alert('Please enter a valid Room ID.');
+                return;
+            }
+
+            // Redirect student to meeting page (can later include actual room logic)
+            window.location.href = `/dashboard/student/meeting?room=${encodeURIComponent(roomId)}`;
+        }
+    </script>
+</body>
+
+</html>

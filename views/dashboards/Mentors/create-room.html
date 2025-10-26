@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Prepare Meeting Room — LearnFast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/mentor/index.html" class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded font-bold">LF
+                </div>
+                <span class="font-semibold text-lg">LearnFast Mentor</span>
+            </a>
+            <nav class="flex gap-4 text-sm text-gray-600">
+                <a href="/mentor/index.html" class="hover:text-indigo-600">Dashboard</a>
+                <a href="/mentor/courses.html" class="hover:text-indigo-600">My Courses</a>
+                <a href="/mentor/create_room.html" class="text-indigo-600 font-medium">Meeting Room</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-4xl mx-auto mt-10 px-4">
+        <div class="bg-white rounded-lg shadow p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Prepare Your Meeting Room</h2>
+
+            <!-- Preview -->
+            <div class="rounded-lg overflow-hidden mb-6">
+                <video id="localVideo" autoplay muted playsinline
+                    class="w-full rounded-lg bg-black aspect-video"></video>
+            </div>
+
+            <!-- Room Info -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Room ID</label>
+                    <div class="flex gap-3">
+                        <input id="roomId" readonly placeholder="Click 'Generate ID'"
+                            class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-600" />
+                        <button type="button" onclick="generateRoomId()"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Generate ID</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button id="copyBtn" onclick="copyRoomId()" disabled
+                        class="text-sm px-4 py-2 border rounded text-gray-600 hover:bg-gray-50">
+                        Copy Room ID
+                    </button>
+                </div>
+
+                <hr class="my-6" />
+
+                <!-- Console -->
+                <div id="meetingConsole"
+                    class="hidden bg-gray-50 border rounded-lg p-4 h-64 overflow-y-auto text-sm font-mono">
+                    <div id="log" class="space-y-1 text-gray-700"></div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex justify-end gap-4 mt-8">
+                    <a href="/mentor/index.html"
+                        class="px-5 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100">Cancel</a>
+                    <button id="startBtn" type="button" onclick="startMeeting()"
+                        class="px-5 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">Start
+                        Meeting</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-100 mt-12 py-6 text-center text-sm text-gray-500">
+        © 2025 LearnFast — Mentor Meeting Setup
+    </footer>
+
+    <script>
+        let socket, roomId, pc, screenStream;
+
+        function log(msg, type = 'info') {
+            const box = document.getElementById('log');
+            const div = document.createElement('div');
+            div.className = type === 'system' ? 'text-indigo-600 font-semibold' : '';
+            div.textContent = msg;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function generateRoomId() {
+            roomId = 'ROOM-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            document.getElementById('roomId').value = roomId;
+            document.getElementById('copyBtn').disabled = false;
+            log(`Generated Room ID: ${roomId}`, 'system');
+        }
+
+        function copyRoomId() {
+            const input = document.getElementById('roomId');
+            navigator.clipboard.writeText(input.value);
+            alert('Room ID copied!');
+        }
+
+        async function startMeeting() {
+            if (!roomId) {
+                alert('Please generate a Room ID first.');
+                return;
+            }
+
+            document.getElementById('meetingConsole').classList.remove('hidden');
+            log(`🟢 Meeting started in ${roomId}`, 'system');
+
+            socket = io();
+            socket.emit('join-room', roomId, { username: 'Mentor' });
+            socket.emit('mentor-start', roomId);
+
+            // Start Screen Share
+            try {
+                screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                document.getElementById('localVideo').srcObject = screenStream;
+                setupWebRTC();
+            } catch (err) {
+                alert('Screen share failed: ' + err.message);
+            }
+
+            socket.on('user-joined', (user) => log(`👋 ${user.username} joined.`));
+        }
+
+        async function setupWebRTC() {
+            pc = new RTCPeerConnection();
+
+            screenStream.getTracks().forEach(track => pc.addTrack(track, screenStream));
+
+            pc.onicecandidate = (event) => {
+                if (event.candidate) socket.emit('ice-candidate', { room: roomId, candidate: event.candidate });
+            };
+
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            socket.emit('offer', { room: roomId, sdp: offer });
+
+            socket.on('answer', async (data) => {
+                await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                log('✅ Student connected.', 'system');
+            });
+
+            socket.on('ice-candidate', async (data) => {
+                try {
+                    if (data.candidate) await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                } catch (e) { console.error('ICE error:', e); }
+            });
+        }
+    </script>
+</body>
+
+</html>

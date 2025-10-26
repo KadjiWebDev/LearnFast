@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Edit Course — LearnFast Mentor Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/index.html" class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded font-bold">LF</div>
+        <span class="font-semibold text-lg">LearnFast</span>
+      </a>
+      <nav class="flex gap-4 text-sm text-gray-600">
+        <a href="/index.html" class="hover:text-indigo-600">Dashboard</a>
+        <a href="/courses.html" class="text-indigo-600 font-medium">Courses</a>
+        <a href="/requests.html" class="hover:text-indigo-600">Requests</a>
+        <a href="/profile.html" class="hover:text-indigo-600">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PAGE CONTENT -->
+  <main class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-6">Edit Course</h1>
+
+    <form id="editCourseForm" onsubmit="handleEditCourse(event)" class="space-y-6">
+      
+      <!-- Title -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Course Title</label>
+        <input id="courseTitle" type="text" required 
+               class="mt-1 block w-full px-3 py-2 border rounded" 
+               placeholder="Fullstack Web Development Bootcamp"/>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea id="courseDesc" rows="4" required 
+                  class="mt-1 block w-full px-3 py-2 border rounded"
+                  placeholder="Describe your course content..."></textarea>
+      </div>
+
+      <!-- Link -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Course Link</label>
+        <input id="courseLink" type="url" required 
+               class="mt-1 block w-full px-3 py-2 border rounded"
+               placeholder="https://learnfast.com/course/123"/>
+      </div>
+
+      <!-- Preview Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Preview Image URL</label>
+        <input id="courseImage" type="url" required 
+               class="mt-1 block w-full px-3 py-2 border rounded"
+               placeholder="https://example.com/image.jpg"/>
+      </div>
+
+      <!-- Preview Video -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Preview Video URL</label>
+        <input id="courseVideo" type="url" required 
+               class="mt-1 block w-full px-3 py-2 border rounded"
+               placeholder="https://youtube.com/watch?v=..."/>
+      </div>
+
+      <!-- Level -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Course Level</label>
+        <select id="courseLevel" required 
+                class="mt-1 block w-full px-3 py-2 border rounded">
+          <option value="">-- Select Level --</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <!-- Pricing -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Price (USD)</label>
+        <input id="coursePrice" type="number" step="0.01" required 
+               class="mt-1 block w-full px-3 py-2 border rounded"
+               placeholder="19.99"/>
+      </div>
+
+      <!-- Save Button -->
+      <div class="flex items-center gap-3">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+          Save Changes
+        </button>
+        <a href="/courses.html" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</a>
+      </div>
+    </form>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-100 mt-12 py-6">
+    <div class="max-w-4xl mx-auto text-center text-sm text-gray-500">
+      © 2025 LearnFast — Mentor Dashboard
+    </div>
+  </footer>
+
+  <script>
+    // This would normally be filled from your backend
+    const courseId = new URLSearchParams(window.location.search).get('id');
+
+    // Load course data (placeholder example)
+    async function loadCourseData() {
+      const res = await fetch(`/api/courses/${courseId}`, {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('login_jwt') }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById('courseTitle').value = data.title;
+        document.getElementById('courseDesc').value = data.description;
+        document.getElementById('courseLink').value = data.link;
+        document.getElementById('courseImage').value = data.previewImage;
+        document.getElementById('courseVideo').value = data.previewVideo;
+        document.getElementById('courseLevel').value = data.level;
+        document.getElementById('coursePrice').value = data.pricing;
+      }
+    }
+
+    // Handle Save Changes
+    async function handleEditCourse(e) {
+      e.preventDefault();
+      const updatedData = {
+        title: document.getElementById('courseTitle').value,
+        description: document.getElementById('courseDesc').value,
+        link: document.getElementById('courseLink').value,
+        previewImage: document.getElementById('courseImage').value,
+        previewVideo: document.getElementById('courseVideo').value,
+        level: document.getElementById('courseLevel').value,
+        pricing: document.getElementById('coursePrice').value,
+      };
+
+      const res = await fetch(`/api/courses/modify/${courseId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('login_jwt'),
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (res.ok) {
+        alert('✅ Course updated successfully!');
+        window.location.href = '/dashboard/mentor';
+      } else {
+        alert('❌ Failed to update course.');
+      }
+    }
+
+    loadCourseData();
+  </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Enroll & Payment — LearnFast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <!-- HEADER -->
+    <header class="bg-white shadow">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/index.html" class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded font-bold">LF
+                </div>
+                <span class="font-semibold text-lg">LearnFast</span>
+            </a>
+            <nav class="flex gap-4 text-sm text-gray-600">
+                <a href="/index.html" class="hover:text-indigo-600">Dashboard</a>
+                <a href="/courses.html" class="hover:text-indigo-600">Courses</a>
+                <a href="/mycourses.html" class="hover:text-indigo-600">My Learning</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-4xl mx-auto mt-10 px-4 space-y-8">
+
+        <!-- Course Summary -->
+        <section class="bg-white rounded-lg shadow p-6 flex flex-col md:flex-row gap-6">
+            <img id="courseImage" src="" alt="Course Cover" class="w-full md:w-64 h-40 object-cover rounded" />
+            <div>
+                <h2 id="courseTitle" class="text-2xl font-bold text-gray-800"></h2>
+                <p id="courseDescription" class="text-gray-600 mt-2"></p>
+                <div class="mt-4">
+                    <p class="text-sm text-gray-500">Mentor: <span class="font-medium text-gray-800"
+                            id="mentorFullName"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 mt-1">Level: <span id="courseLevel"></span></p>
+                    <p class="text-lg font-semibold text-indigo-600 mt-2" id="pricing"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Section -->
+        <section class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-4">Payment Information</h3>
+
+            <form id="payForm" class="space-y-6">
+                <!-- Card Details -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cardholder Name</label>
+                    <input type="text" placeholder="John Doe"
+                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                    <input type="text" placeholder="1234 5678 9012 3456"
+                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                        <input type="text" placeholder="MM/YY"
+                            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">CVC</label>
+                        <input type="text" placeholder="123"
+                            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                        <select
+                            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>United States</option>
+                            <option>Canada</option>
+                            <option>United Kingdom</option>
+                            <option>Algeria</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Promo Code -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Promo Code (optional)</label>
+                    <input type="text" placeholder="SAVE10"
+                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <!-- Total -->
+                <div class="flex justify-between items-center border-t pt-4 mt-6">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span class="text-2xl font-bold text-indigo-600" id="coursePricing"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex justify-end gap-4 mt-6">
+                    <a href="/courses.html"
+                        class="px-5 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100">Cancel</a>
+                    <button type="submit"
+                        class="px-5 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+                        Confirm & Pay
+                    </button>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 mt-12 py-6">
+        <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
+            © 2025 LearnFast — Secure Enrollment
+        </div>
+    </footer>
+</body>
+
+<script>
+    const courseId = new URLSearchParams(window.location.search).get('id');
+    document.getElementById("payForm").addEventListener("submit", PayCourse);
+
+    async function RetrieveInfo() {
+        const res = await fetch('/api/courses/' + courseId, {
+            method: 'GET',
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('login_jwt')
+            }
+        })
+        const response = await res.json()
+        if (res.ok) {
+            document.getElementById("mentorFullName").innerHTML = response.mentor_id.user_id.full_name
+            document.getElementById("courseImage").src = response.previewImage
+            document.getElementById("courseTitle").innerHTML = response.title
+            document.getElementById("courseDescription").innerHTML = response.description
+            document.getElementById("coursePricing").innerHTML = response.pricing + ' $'
+            document.getElementById("courseLevel").innerHTML = response.level
+        }
+
+    }
+    async function PayCourse(e) {
+        e.preventDefault();
+
+        const res = await fetch('/api/courses/pay/' + courseId, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('login_jwt')
+            },
+        })
+        if (res.ok) {
+            alert("Succesfully Payed the course!")
+        } else { alert("error") }
+    }
+    RetrieveInfo()
+</script>
+
+</html>

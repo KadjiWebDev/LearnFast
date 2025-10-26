@@ -1,0 +1,12 @@
+# Preparing the database
+		Users: id, username, password, profile_picture, full_name,bio, birthday,role[student,mentor]
+		Mentor: user_id(ref:users), linkedIN, instagram, facebook, portfolio.
+		Course: Link, Title, description, pricing, mentor_id(ref:mentor), created_at, updated_at.
+		Student: user_id(ref:users), payed_courses, hours_spent. 
+		
+		payed_course: student_id(ref:student), course_id(ref:course), progress, payed_at.
+		
+		followers: student_id(ref:student), mentor_id(ref:mentor)
+		comments:comment, course_id(ref:course), user_id(ref:user)		
+		broadcastlinks:mentor_id,slug
+		admin: username, password, email

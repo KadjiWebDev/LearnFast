@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mentor Dashboard — LearnFast</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+  <!-- NAV -->
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-4">
+          <a href="/" class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">LF</div>
+            <div class="text-lg font-semibold">LearnFast</div>
+          </a>
+          <nav class="hidden md:flex gap-3 text-sm text-gray-600">
+            <a href="/dashboard/mentor" class="px-2 py-1 rounded hover:bg-gray-100">Dashboard</a>
+            <a href="/dashboard/mentor/create-room" class="px-2 py-1 rounded hover:bg-gray-100">Create Room</a>
+            <a href="dashboard/courses" class="px-2 py-1 rounded hover:bg-gray-100">Courses</a>
+            <a href="dashboard/requests" class="px-2 py-1 rounded hover:bg-gray-100">Requests</a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button id="createCourseBtn" class="bg-indigo-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700">+
+            Add Course</button>
+          <a href="/dashboard/mentor/profile" class="text-sm px-3 py-1 rounded hover:bg-gray-100">Profile</a>
+          <form action="/auth/logout" method="POST">
+            <button type="submit" class="text-sm px-3 py-1 rounded bg-gray-100">Logout</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+      <!-- LEFT: Profile & CV -->
+      <aside class="lg:col-span-1 space-y-6">
+        <!-- Profile card -->
+        <div class="bg-white rounded-lg shadow p-5">
+          <div class="flex items-center gap-4">
+            <img id="profilePic" src=".." alt="Profile" class="w-20 h-20 rounded-full object-cover border">
+            <div>
+              <h3 id="mentorName" class="text-lg font-semibold"></h3>
+              <div class="text-sm text-gray-500" id="mentorLinkedIN"></div>
+              <div class="text-sm text-gray-500" id="mentorBirthday"></div>
+              <div class="mt-2 text-sm text-gray-600"><span id="role"></span> • <span id="title"></span></div>
+            </div>
+          </div>
+
+          <div class="mt-4 text-sm text-gray-700">
+            <div class="font-medium">Bio</div>
+            <p class="text-gray-600 text-sm mt-1" id="bio"></p>
+          </div>
+
+          <div class="mt-4 flex gap-2">
+            <a href="/dashboard/mentor/edit-profile"><button
+                class="flex-1 text-sm border px-3 py-2 rounded hover:bg-gray-50">Edit Profile</button></a>
+            <a href="/dashboard/mentor/profile"><button
+                class="flex-1 text-sm border px-3 py-2 rounded hover:bg-gray-50">My Profile</button></a>
+          </div>
+        </div>
+
+        <!-- CV / Portfolio -->
+        <div class="bg-white rounded-lg shadow p-5">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold">CV & Portfolio</h4>
+            <button id="addPortfolioBtn" class="text-sm text-indigo-600 hover:underline">Add</button>
+          </div>
+
+          <div id="portfolioList" class="mt-4 space-y-3">
+            <!-- Example portfolio item -->
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center text-gray-500">CV</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <a id="portfolio" href="#">
+                    <div class="font-medium text-sm"><span id="portfolioName"></span></div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </aside>
+
+      <!-- CENTER: Courses list -->
+      <section class="lg:col-span-2 space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold">Your Courses</h2>
+          <div class="text-sm text-gray-500">Manage, edit or remove your courses</div>
+        </div>
+
+        <!-- Courses table / cards -->
+        <div class="bg-white rounded-lg shadow divide-y">
+          <!-- header row -->
+          <div class="p-4 grid grid-cols-12 gap-4 text-sm text-gray-500 font-medium">
+            <div class="col-span-6">Course</div>
+            <div class="col-span-2">Price</div>
+            <div class="col-span-2">Level</div>
+            <div class="col-span-2 text-right">Actions</div>
+          </div>
+
+          <!-- Example course rows -->
+          <div id="coursesList" class="divide-y">
+
+          </div>
+
+          <!-- footer / empty area -->
+          <div class="p-4 text-sm text-gray-500">
+            Tip: Use <span class="font-medium">Add Course</span> to publish a new course. Click Edit to update details
+            or Delete to remove permanently.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Student requests -->
+      <aside class="lg:col-span-1 space-y-6">
+        <div class="bg-white rounded-lg shadow p-5">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold">Requests</h4>
+            <div class="text-xs text-gray-500">New</div>
+          </div>
+
+          <div id="requestsList" class="mt-4 space-y-3">
+            <!-- request item -->
+            <div class="border rounded p-3">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium">AS
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-medium">Ahmed B.</div>
+                      <div class="text-xs text-gray-500">Requested: 2025-09-26</div>
+                    </div>
+                    <div class="text-xs text-indigo-600">Pending</div>
+                  </div>
+                  <div class="mt-2 text-sm text-gray-600 line-clamp-2">I need a 1:1 meeting to discuss career advice and
+                    a roadmap for fullstack position.</div>
+                  <div class="mt-3 flex gap-2">
+                    <button class="text-sm px-3 py-1 border rounded viewRequestBtn">View</button>
+                    <button class="text-sm px-3 py-1 bg-green-600 text-white rounded acceptRequestBtn">Schedule</button>
+                    <button class="text-sm px-3 py-1 border rounded declineRequestBtn">Decline</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded p-3">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium">MK
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-medium">Hamza K.</div>
+                      <div class="text-xs text-gray-500">Requested: 2025-09-21</div>
+                    </div>
+                    <div class="text-xs text-green-600">Scheduled</div>
+                  </div>
+                  <div class="mt-2 text-sm text-gray-600 line-clamp-2">Can you review my project and give feedback on
+                    architecture & testing?</div>
+                  <div class="mt-3 flex gap-2">
+                    <button class="text-sm px-3 py-1 border rounded viewRequestBtn">View</button>
+                    <button class="text-sm px-3 py-1 bg-gray-100 rounded" disabled>Scheduled</button>
+                    <button class="text-sm px-3 py-1 border rounded declineRequestBtn">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Course Modal -->
+  <div id="courseModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-lg w-full max-w-2xl shadow-lg overflow-auto max-h-[90vh]">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h3 id="courseModalTitle" class="text-lg font-semibold">Add Course</h3>
+        <button class="text-gray-600 hover:text-red-600" onclick="toggleCourseModal(false)">✕</button>
+      </div>
+
+      <form id="courseForm" class="p-4 space-y-4" onsubmit="handleCourseForm(event)">
+
+        <!-- Title -->
+        <div>
+          <label class="text-sm font-medium">Title</label>
+          <input id="courseTitle" type="text" required class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="text-sm font-medium">Description</label>
+          <textarea id="courseDesc" rows="3" required class="mt-1 block w-full px-3 py-2 border rounded"></textarea>
+        </div>
+
+        <!-- Link -->
+        <div>
+          <label class="text-sm font-medium">Course Link</label>
+          <input id="courseLink" type="url" required placeholder="https://example.com/course-link"
+            class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+
+        <!-- Preview Image -->
+        <div>
+          <label class="text-sm font-medium">Preview Image URL</label>
+          <input id="courseImage" type="url" required class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+
+        <!-- Preview Video -->
+        <div>
+          <label class="text-sm font-medium">Preview Video URL</label>
+          <input id="courseVideo" type="url" required class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+
+        <!-- Level -->
+        <div>
+          <label class="text-sm font-medium">Level</label>
+          <select id="courseLevel" required class="mt-1 block w-full px-3 py-2 border rounded">
+            <option value="">-- Select Level --</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+
+        <!-- Pricing -->
+        <div>
+          <label class="text-sm font-medium">Price (USD)</label>
+          <input id="coursePrice" type="number" step="0.01" required
+            class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-3">
+          <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Save Course</button>
+          <button type="button" class="px-4 py-2 border rounded" onclick="toggleCourseModal(false)">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- View Request Modal -->
+  <div id="requestModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-lg w-full max-w-lg shadow-lg overflow-auto max-h-[90vh]">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h3 class="text-lg font-semibold">Request details</h3>
+        <button class="text-gray-600" onclick="toggleRequestModal(false)">✕</button>
+      </div>
+
+      <div class="p-4 space-y-4">
+        <div>
+          <div class="text-sm text-gray-500">Student</div>
+          <div id="reqStudent" class="font-medium">Student Name</div>
+        </div>
+
+        <div>
+          <div class="text-sm text-gray-500">Message</div>
+          <div id="reqMessage" class="text-gray-700">Message body goes here...</div>
+        </div>
+
+        <div>
+          <div class="text-sm text-gray-500">Preferred times</div>
+          <div id="reqTimes" class="text-gray-700">Oct 1, 2025 — morning</div>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="bg-green-600 text-white px-4 py-2 rounded">Schedule meeting</button>
+          <button class="px-4 py-2 border rounded">Message student</button>
+          <button class="px-4 py-2 border rounded" onclick="toggleRequestModal(false)">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload CV Modal -->
+  <div id="uploadCvModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-lg w-full max-w-md shadow-lg overflow-auto max-h-[90vh]">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h3 class="text-lg font-semibold">Upload CV / Portfolio</h3>
+        <button class="text-gray-600" onclick="toggleUploadCvModal(false)">✕</button>
+      </div>
+
+      <form class="p-4 space-y-4" onsubmit="handleUploadCv(event)">
+        <div>
+          <label class="text-sm font-medium">Title</label>
+          <input id="cvTitle" type="text" required class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+        <div>
+          <label class="text-sm font-medium">File (PDF or link)</label>
+          <input id="cvFile" type="url" placeholder="https://..." class="mt-1 block w-full px-3 py-2 border rounded" />
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Upload</button>
+          <button type="button" class="px-4 py-2 border rounded" onclick="toggleUploadCvModal(false)">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS - UI interactions only -->
+  <script>
+    // Modal toggles
+    const courseModal = document.getElementById('courseModal');
+    const requestModal = document.getElementById('requestModal');
+    const uploadCvModal = document.getElementById('uploadCvModal');
+
+    document.getElementById('createCourseBtn').addEventListener('click', () => {
+      document.getElementById('courseModalTitle').textContent = 'Add Course';
+      document.getElementById('courseForm').dataset.mode = 'add';
+      toggleCourseModal(true);
+    });
+
+    document.getElementById('addPortfolioBtn').addEventListener('click', () => toggleUploadCvModal(true));
+
+
+
+    // modal helper functions
+    function toggleCourseModal(show) {
+      courseModal.classList.toggle('hidden', !show);
+      courseModal.classList.toggle('flex', show);
+    }
+    function toggleRequestModal(show) {
+      requestModal.classList.toggle('hidden', !show);
+      requestModal.classList.toggle('flex', show);
+    }
+    function toggleUploadCvModal(show) {
+      uploadCvModal.classList.toggle('hidden', !show);
+      uploadCvModal.classList.toggle('flex', show);
+    }
+
+    // form handlers (placeholders — integrate with API)
+    async function handleCourseForm(e) {
+      e.preventDefault();
+      toggleCourseModal(false);
+      const title = document.getElementById("courseTitle").value
+      const description = document.getElementById("courseDesc").value
+      const link = document.getElementById("courseLink").value
+      const previewImage = document.getElementById("courseImage").value
+      const previewVideo = document.getElementById("courseVideo").value
+      const level = document.getElementById("courseLevel").value
+      const pricing = document.getElementById("coursePrice").value
+
+      const formData = { link, previewImage, previewVideo, title, description, level, pricing }
+      const res = await fetch('/api/courses/add', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("login_jwt")
+        },
+        body: JSON.stringify(formData)
+      })
+      const response = await res.json();
+      if (res.ok) {
+        alert("success")
+      }
+    }
+
+    function handleUploadCv(e) {
+      e.preventDefault();
+      const title = document.getElementById('cvTitle').value;
+      const file = document.getElementById('cvFile').value;
+      formData = { title, file }
+      // Integrate: POST to /api/mentor/portfolio
+      fetch('/dashboard/mentor/update/portfolio', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("login_jwt")
+        },
+        body: JSON.stringify(formData)
+      })
+
+      toggleUploadCvModal(false);
+    }
+
+    // small defensive: close modals on backdrop click
+    [courseModal, requestModal, uploadCvModal].forEach(modal => {
+      modal?.addEventListener('click', (ev) => {
+        if (ev.target === modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      });
+    });
+  </script>
+
+  <script>
+    async function retrieveInfo() {
+      res = await fetch('/dashboard/mentor/me', {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('login_jwt')
+        }
+      })
+      response = await res.json();
+      if (res.ok) {
+        document.getElementById("profilePic").src = "http://localhost:3000" + response.user.profile_picture
+        document.getElementById("mentorName").innerHTML = response.user.full_name
+        document.getElementById("bio").innerHTML = response.user.bio
+        document.getElementById("mentorLinkedIN").innerHTML = response.mentor.linkedIN
+        const birthday = new Date(response.user.birthday);
+        const formattedBirthday = birthday.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById("mentorBirthday").innerHTML = formattedBirthday;
+        document.getElementById("role").innerHTML = response.user.role
+        document.getElementById("title").innerHTML = response.mentor.title
+        document.getElementById("portfolioName").innerHTML = response.mentor.portfolioName
+
+        document.getElementById("coursesList").innerHTML = response.mentor.courses.map(course => {
+          return `
+        <div class="p-4 grid grid-cols-12 gap-4 items-center">
+              <div class="col-span-6 flex items-center gap-3">
+                <img src="${course.previewImage || '#'}" alt="" class="w-16 h-10 object-cover rounded">
+                <div>
+                  <div class="font-medium">${course.title}</div>
+                  <div class="text-xs text-gray-500">${course.description}</div>
+                </div>
+              </div>
+              <div class="col-span-2 font-semibold">${course.pricing}$</div>
+              <div class="col-span-2 text-sm text-gray-600">${course.level}</div>
+              <div class="col-span-2 text-right">
+                <a href='/dashboard/mentor/edit-course?id=${course.id}''><button class="text-sm px-3 py-1 rounded border mr-2">Edit</button></a>
+                <button class="text-sm px-3 py-1 rounded bg-red-600 text-white" onclick="deleteCourse('${course.id}')">Delete</button>
+              </div>
+        </div>
+        `})
+
+        if (response.mentor.portfolio) document.getElementById("portfolio").href = response.mentor.portfolio
+
+      } else alert("Unauthorized")
+
+    }
+
+    async function deleteCourse(id) {
+      const ASK = confirm('Do you really want to delete this course?')
+      if (ASK) {
+        const res = await fetch('/api/courses/delete/' + id, {
+          method: "POST",
+          headers: { "Authorization": "Bearer " + localStorage.getItem("login_jwt") }
+        })
+      }
+    }
+    retrieveInfo()
+  </script>
+
+</body>
+
+</html>

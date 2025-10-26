@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LearnFast — Courses Marketplace (Udemy Clone)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* small visual tweaks */
+    .line-clamp-2 { display: -webkit-box;  -webkit-box-orient: vertical; overflow: hidden; }
+    .glass { background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- NAVBAR -->
+  <header class="bg-white shadow-sm">
+    <div class=" mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <a href="#" class="flex items-center space-x-2">
+            <div class="w-9 h-9 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">LF</div>
+            <span class="font-semibold text-lg">LearnFast</span>
+          </a>
+          <nav class="hidden md:flex space-x-4 text-sm text-gray-600">
+            <a class="hover:text-indigo-600" href="#">All Courses</a>
+            <a class="hover:text-indigo-600" href="#">For Teams</a>
+            <a class="hover:text-indigo-600" href="#">About</a>
+          </nav>
+        </div>
+
+        <div class="flex-1 mx-6 hidden lg:block">
+          <div class="relative">
+            <input id="search" type="text" placeholder="Search for anything — design, coding, marketing..." class="w-full rounded-lg border border-gray-200 py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            <button class="absolute right-1 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm">Search</button>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <a class="hidden md:inline text-sm px-3 py-1.5 border rounded hover:bg-gray-100" href="./signup">Become an instructor</a>
+          <a class="text-sm px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700" href="./signup">Sign up</a>
+          <a class="text-sm px-3 py-1.5 rounded bg-indigo-600 text-white hover:bg-indigo-700" href="./login">Log in</a>
+        </div>
+
+        <!-- mobile menu button -->
+        <button id="mobileMenuBtn" class="ml-3 p-2 md:hidden rounded-md hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- mobile nav -->
+      <div id="mobileNav" class="md:hidden hidden pb-4">
+        <input type="text" placeholder="Search courses..." class="w-full rounded-md border border-gray-200 p-2 mb-3" />
+        <div class="flex flex-col space-y-2">
+          <a class="px-2 py-2 rounded hover:bg-gray-100" href="#">All Courses</a>
+          <a class="px-2 py-2 rounded hover:bg-gray-100" href="#">For Teams</a>
+          <a class="px-2 py-2 rounded hover:bg-gray-100" href="#">About</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div>
+          <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">Learn in-demand skills — online, at your pace</h1>
+          <p class="mt-4 text-lg opacity-90">Explore 10,000+ courses from industry experts. Build projects, get certified, and advance your career.</p>
+          <div class="mt-6 flex gap-3">
+            <button class="bg-white text-indigo-600 font-semibold px-5 py-3 rounded shadow hover:shadow-lg">Explore Courses</button>
+          </div>
+
+        </div>
+
+        <div class="hidden lg:flex justify-center">
+          <div class="w-full max-w-md glass rounded-xl p-4 shadow-lg">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="hero" class="rounded-md w-full h-48 object-cover mb-3">
+            <h3 class="font-semibold">Featured course: Build a Fullstack App</h3>
+            <p class="text-sm mt-1">A practical course to build and deploy a real-world application from scratch.</p>
+            <div class="mt-3 flex items-center justify-between">
+              <div class="text-sm font-medium">by Jane Doe</div>
+              <div class="text-indigo-700 font-bold">$24.99</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- SIDEBAR (filters) -->
+      <aside class="lg:col-span-1 bg-white rounded-lg p-4 shadow-sm hidden lg:block">
+        <h4 class="font-semibold mb-3">Filters</h4>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Price</label>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 rounded bg-indigo-50 text-indigo-700 text-sm">All</button>
+            <button class="px-3 py-1 rounded border text-sm">Free</button>
+            <button class="px-3 py-1 rounded border text-sm">Paid</button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Level</label>
+          <div class="flex flex-col gap-2 text-sm">
+            <label><input type="checkbox" class="mr-2"> Beginner</label>
+            <label><input type="checkbox" class="mr-2"> Intermediate</label>
+            <label><input type="checkbox" class="mr-2"> Advanced</label>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <button class="w-full bg-indigo-600 text-white py-2 rounded">Apply filters</button>
+        </div>
+      </aside>
+
+      <!-- COURSES GRID -->
+      <section class="lg:col-span-3">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold bg-white pb-4 pr-4 pl-4 pt-1 rounded">Popular courses</h2>
+          <div class="text-sm text-gray-500">Showing <span id="count">8</span> results</div>
+        </div>
+
+        <div id="coursesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Course Card (repeat) -->
+          <!-- Example course -->
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">Fullstack Web Development Bootcamp</h3>
+              <p class="text-sm text-gray-500 mt-1">Build production-ready apps using Node.js, React, and MongoDB.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">John Smith</span></div>
+                <div class="text-indigo-700 font-bold">$19.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.7 ★ (12k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('Fullstack Web Development Bootcamp', 'Build production-ready apps using Node.js, React, and MongoDB.', '$19.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Duplicate cards with different content -->
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">UI/UX Design Masterclass</h3>
+              <p class="text-sm text-gray-500 mt-1">From wireframes to prototypes — design beautiful interfaces.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">Mary Lee</span></div>
+                <div class="text-indigo-700 font-bold">$14.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.5 ★ (8k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('UI/UX Design Masterclass', 'From wireframes to prototypes — design beautiful interfaces.', '$14.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1508830524289-0adcbe822b40?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">Python for Data Science</h3>
+              <p class="text-sm text-gray-500 mt-1">Learn Python, pandas, NumPy and data visualization fundamentals.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">DataLab</span></div>
+                <div class="text-indigo-700 font-bold">$21.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.8 ★ (20k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('Python for Data Science', 'Learn Python, pandas, NumPy and data visualization fundamentals.', '$21.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1517433456452-f9633a875f6f?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">Digital Marketing 101</h3>
+              <p class="text-sm text-gray-500 mt-1">SEO, Ads, email marketing, and growth tactics to scale your brand.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">MarketerPro</span></div>
+                <div class="text-indigo-700 font-bold">$12.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.4 ★ (6k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('Digital Marketing 101', 'SEO, Ads, email marketing, and growth tactics to scale your brand.', '$12.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">React: From Zero to Hero</h3>
+              <p class="text-sm text-gray-500 mt-1">Master React fundamentals and real-world patterns.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">FrontendGuru</span></div>
+                <div class="text-indigo-700 font-bold">$17.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.6 ★ (10k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('React: From Zero to Hero', 'Master React fundamentals and real-world patterns.', '$17.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">AWS Cloud Practitioner</h3>
+              <p class="text-sm text-gray-500 mt-1">Learn AWS core services and prepare for the certification.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">CloudMaster</span></div>
+                <div class="text-indigo-700 font-bold">$29.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.2 ★ (4k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('AWS Cloud Practitioner', 'Learn AWS core services and prepare for the certification.', '$29.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1525186402429-2f6a4e1d55ad?w=1000&q=60&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Course cover" class="w-full h-40 object-cover">
+            <div class="p-4">
+              <h3 class="font-semibold line-clamp-2">Excel for Business</h3>
+              <p class="text-sm text-gray-500 mt-1">Formulas, pivot tables, and automation for analysts.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">By <span class="font-medium">OfficePro</span></div>
+                <div class="text-indigo-700 font-bold">$9.99</div>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-xs text-gray-500">4.3 ★ (5k)</div>
+                <button class="text-sm px-3 py-1 bg-indigo-600 text-white rounded" onclick="openPreview('Excel for Business', 'Formulas, pivot tables, and automation for analysts.', '$9.99')">Preview</button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 bg-white border-t">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">LF</div>
+            <div>
+              <div class="font-semibold">LearnFast</div>
+              <div class="text-sm text-gray-500">Online courses to boost your career</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-sm text-gray-500 flex gap-6">
+          <div>© <span id="year"></span> LearnFast</div>
+          <a class="hover:underline" href="#">Terms</a>
+          <a class="hover:underline" href="#">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- COURSE PREVIEW MODAL -->
+  <div id="previewModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg max-w-2xl w-full mx-4 shadow-lg overflow-hidden">
+      <div class="p-4 flex justify-between items-start">
+        <div>
+          <h3 id="previewTitle" class="font-semibold text-lg"></h3>
+          <p id="previewSubtitle" class="text-sm text-gray-600 mt-1"></p>
+        </div>
+        <button onclick="closePreview()" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="p-4 border-t">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2">
+            <div class="w-full h-48 bg-gray-100 rounded overflow-hidden flex items-center justify-center">Video preview (placeholder)</div>
+            <div class="mt-3 text-sm text-gray-700">This is a preview modal. Replace this with a real course video or trailer using your player (Vimeo/YouTube or an MP4 player).</div>
+          </div>
+          <aside>
+            <div class="p-3 bg-gray-50 rounded">
+              <div class="text-sm text-gray-600">Instructor</div>
+              <div class="font-medium">John Smith</div>
+              <div class="mt-3 text-sm">Price: <span id="previewPrice" class="font-semibold text-indigo-700"></span></div>
+              <button class="mt-4 w-full bg-indigo-600 text-white py-2 rounded">Buy now</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile nav toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    mobileBtn.addEventListener('click', () => mobileNav.classList.toggle('hidden'));
+
+    // simple preview modal functions
+    function openPreview(title, subtitle, price) {
+      document.getElementById('previewTitle').textContent = title;
+      document.getElementById('previewSubtitle').textContent = subtitle;
+      document.getElementById('previewPrice').textContent = price;
+      document.getElementById('previewModal').classList.remove('hidden');
+      document.getElementById('previewModal').classList.add('flex');
+    }
+    function closePreview() {
+      document.getElementById('previewModal').classList.remove('flex');
+      document.getElementById('previewModal').classList.add('hidden');
+    }
+
+    // example: small search filter for demo (client-side)
+    document.getElementById('search')?.addEventListener('input', function(e) {
+      const q = e.target.value.toLowerCase();
+      const cards = document.querySelectorAll('#coursesGrid article');
+      let count = 0;
+      cards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+        if (!q || title.includes(q) || desc.includes(q)) {
+          card.style.display = '';
+          count++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      document.getElementById('count').textContent = count;
+    });
+  </script>
+</body>
+</html>

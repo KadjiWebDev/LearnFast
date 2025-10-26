@@ -1,0 +1,1 @@
+// Check if the course is owned by the user (bought it)

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Meeting Room — LearnFast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body class="bg-gray-900 text-gray-100 flex flex-col h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-gray-800 flex justify-between items-center px-6 py-3">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-indigo-600 flex items-center justify-center rounded font-bold">LF</div>
+            <h1 class="font-semibold text-lg">LearnFast Meeting</h1>
+        </div>
+        <div id="roomDisplay" class="text-sm text-gray-300"></div>
+        <button onclick="leaveRoom()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm">
+            Leave Room
+        </button>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4">
+        <video id="mentorVideo" autoplay playsinline class="rounded-lg bg-black w-full max-w-5xl aspect-video"></video>
+        <div id="status" class="text-gray-400 text-sm mt-3">Waiting for mentor’s screen...</div>
+    </main>
+
+    <footer class="bg-gray-800 py-3 text-center text-gray-500 text-sm">
+        © 2025 LearnFast — Student Meeting Room
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomId = urlParams.get("room");
+        const username = prompt("Enter your name:", "Student") || "Student";
+        document.getElementById("roomDisplay").innerText = `Room: ${roomId}`;
+
+        const socket = io();
+        let pc;
+
+        socket.emit('join-room', roomId, { username });
+
+        pc = new RTCPeerConnection();
+
+        pc.ontrack = (event) => {
+            document.getElementById('mentorVideo').srcObject = event.streams[0];
+            document.getElementById('status').innerText = "🟢 Viewing mentor’s screen";
+        };
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate) socket.emit('ice-candidate', { room: roomId, candidate: event.candidate });
+        };
+
+        socket.on('offer', async (data) => {
+            await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            socket.emit('answer', { room: roomId, sdp: answer });
+        });
+
+        socket.on('ice-candidate', async (data) => {
+            if (data.candidate) await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+        });
+
+        function leaveRoom() {
+            if (confirm("Leave meeting?")) {
+                socket.emit('leave-room', roomId, { username });
+                window.location.href = "/dashboard/student";
+            }
+        }
+    </script>
+</body>
+
+</html>

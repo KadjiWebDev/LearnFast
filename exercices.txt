@@ -1,0 +1,28 @@
+Upgrade the HTML Pages (index.html, signup.html, login.html): (done)
+    1- Footer into login/signup
+    2- Toast Alert of succes/failed 
+    3- Save The JWT in the LocalStorage / Cookies
+Create Dashboard for Mentor / Student 
+    1- Redirect the login to the correct Dashboard 
+
+* Think how to hide admin Panel * 
+    - Subdomains for dashboard (3s1cz3miu3ddk8gelmornjyq6.example.com)
+    - Admin Dashboard Path /3s1cz3miu3ddk8gelmornjyq6/login
+
+	I- Complete Mentor Dashboard *  (done)
+   	 	- Courses List 
+   	 	- Profile HTML Page 
+  	 	- Edit Profile (full_name, title, linkedIN, change-password)
+    II- Complete Student Dashboard (todo)
+        - Recreate Student Dashboard
+            1.  List of owned courses
+                    [Detail Course, Rating System, Progress System] (to do)
+            2.  List of all courses
+                    [Search bar, Filter, Views Counter, Course Detail]
+            3.  List of mentors  (dont do this)
+                    [Detail of mentor, Request Help (Fix 20 Minutes Live call) ]
+            4.  Profile (Edit Profile)
+
+Introduction to Middlewares [] (Today Course)
+
+-- Few Dashboard Mentor / Student OR Admin 

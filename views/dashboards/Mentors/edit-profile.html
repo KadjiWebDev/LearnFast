@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Edit Profile — LearnFast Mentor Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/index.html" class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded font-bold">LF</div>
+        <span class="font-semibold text-lg">LearnFast</span>
+      </a>
+      <nav class="flex gap-4 text-sm text-gray-600">
+        <a href="/index.html" class="hover:text-indigo-600">Dashboard</a>
+        <a href="/courses.html" class="hover:text-indigo-600">Courses</a>
+        <a href="/requests.html" class="hover:text-indigo-600">Requests</a>
+        <a href="/profile.html" class="text-indigo-600 font-medium">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-6">Edit Profile</h1>
+
+    <form id="editProfileForm" onsubmit="handleProfileUpdate(event)" class="space-y-6">
+
+      <!-- Profile Picture -->
+      <div class="flex items-center gap-4">
+        <img id="profilePicturePreview" src="http://localhost:3000/default_image.jpg" alt="Profile Picture"
+          class="w-20 h-20 rounded-full object-cover border" />
+        <div>
+          <label class="text-sm font-medium text-gray-700">Change Profile Picture</label>
+          <input id="profilePicture" type="file" accept="image/*" class="block mt-1 text-sm text-gray-600" />
+        </div>
+      </div>
+
+      <!-- Full Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Full Name</label>
+        <input id="fullName" type="text" required class="mt-1 block w-full px-3 py-2 border rounded"
+          placeholder="John Mentor" />
+      </div>
+
+      <!-- Username -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input id="username" type="text" required class="mt-1 block w-full px-3 py-2 border rounded"
+          placeholder="johnmentor" />
+      </div>
+
+      <!-- Bio -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Bio</label>
+        <textarea id="bio" rows="3" class="mt-1 block w-full px-3 py-2 border rounded"
+          placeholder="Write a short bio about your expertise..."></textarea>
+      </div>
+
+      <!-- Birthday -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Birthday</label>
+        <input id="birthday" type="date" class="mt-1 block w-full px-3 py-2 border rounded" />
+      </div>
+
+      <!-- City -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Title</label>
+        <input id="title" type="text" class="mt-1 block w-full px-3 py-2 border rounded"
+          placeholder="Full Stack Web Developer" />
+      </div>
+
+      <!-- Social Links -->
+      <div>
+        <h2 class="text-lg font-semibold mt-6 mb-2">Social Links</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium text-gray-700">LinkedIn</label>
+            <input id="linkedin" type="url" class="mt-1 block w-full px-3 py-2 border rounded"
+              placeholder="https://linkedin.com/in/..." />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-700">Instagram</label>
+            <input id="instagram" type="url" class="mt-1 block w-full px-3 py-2 border rounded"
+              placeholder="https://instagram.com/..." />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-700">Facebook</label>
+            <input id="facebook" type="url" class="mt-1 block w-full px-3 py-2 border rounded"
+              placeholder="https://facebook.com/..." />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-700">Portfolio / CV</label>
+            <input id="portfolio" type="url" class="mt-1 block w-full px-3 py-2 border rounded"
+              placeholder="https://myportfolio.com" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3 pt-4">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+          Save Changes
+        </button>
+        <a href="/profile.html" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</a>
+      </div>
+    </form>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-100 mt-12 py-6">
+    <div class="max-w-4xl mx-auto text-center text-sm text-gray-500">
+      © 2025 LearnFast — Mentor Dashboard
+    </div>
+  </footer>
+
+  <script>
+    // Load mentor profile data
+    async function loadProfile() {
+      const res = await fetch('/api/mentor/profile', {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('login_jwt') }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById('fullName').value = data.full_name || '';
+        document.getElementById('username').value = data.username || '';
+        document.getElementById('bio').value = data.bio || '';
+        document.getElementById('birthday').value = data.birthday?.split('T')[0] || '';
+        document.getElementById('title').value = data.title || '';
+        document.getElementById('linkedin').value = data.linkedIN || '';
+        document.getElementById('instagram').value = data.instagram || '';
+        document.getElementById('facebook').value = data.facebook || '';
+        document.getElementById('portfolio').value = data.portfolio || '';
+        document.getElementById('profilePicturePreview').src = 'http://localhost:3000' + data.profile_picture || 'http://localhost:3000/default_image.jpg';
+      }
+    }
+
+    // Handle profile picture preview
+    document.getElementById('profilePicture').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          document.getElementById('profilePicturePreview').src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Handle profile update
+    async function handleProfileUpdate(e) {
+      e.preventDefault();
+
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append text fields
+      //formData.append('KEY', VALUE)
+      formData.append('full_name', document.getElementById('fullName').value);
+      formData.append('username', document.getElementById('username').value);
+      formData.append('bio', document.getElementById('bio').value);
+      formData.append('birthday', document.getElementById('birthday').value);
+      formData.append('title', document.getElementById('title').value);
+      formData.append('linkedIN', document.getElementById('linkedin').value);
+      formData.append('instagram', document.getElementById('instagram').value);
+      formData.append('facebook', document.getElementById('facebook').value);
+      formData.append('portfolio', document.getElementById('portfolio').value);
+
+      const fileInput = document.getElementById('profilePicture');
+      if (fileInput && fileInput.files.length > 0) {
+        // Multiple file upload
+        formData.append('profile_picture', fileInput.files[0]);
+      }
+
+      const res = await fetch('/api/mentor/profile', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('login_jwt'),
+        },
+        body: formData,
+      });
+
+      if (res.ok) {
+        alert('Profile updated successfully!');
+        window.location.href = '/dashboard/mentor';
+      } else {
+        const err = await res.json();
+        alert('Failed to update profile: ' + (err.error || 'Unknown error'));
+      }
+    }
+
+    loadProfile();
+  </script>
+
+</body>
+
+</html>
